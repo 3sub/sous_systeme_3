@@ -1,4 +1,3 @@
-:::writing{variant="document" id="58321" title="README — Compilation avec CMake"}
 ### Compiler avec CMake
 
 Depuis le terminal VS Code, à la racine du projet :
