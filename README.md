@@ -10,4 +10,4 @@ Puis :
 
 Tu peux ensuite lancer :
 
-```.\build\MonProjet.exe```
+```.\build\debug\sous_systeme_3.exe```
