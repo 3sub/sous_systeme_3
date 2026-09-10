@@ -11,13 +11,13 @@ Puis :
 CMake va créer quelque chose comme :
 
 MonProjet/
-├── CMakeLists.txt 
-├── main.cpp 
-├── Personne.cpp 
-├── Personne.hpp 
-└── build/ 
-    ├── ... 
-    └── MonProjet.exe 
+CMakeLists.txt 
+main.cpp 
+Personne.cpp 
+Personne.hpp 
+build/ 
+... 
+MonProjet.exe 
 
 Tu peux ensuite lancer :
 
