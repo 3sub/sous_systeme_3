@@ -1,32 +1,42 @@
 #include <Arduino.h>
-#include "cycle_securite.h"
+#include "mBarriere.h"
 
-// Configuration des broches pour Arduino MEGA
-const CycleConfig_t config_barriere = {
-    .pin_fin_haut = 2,
-    .pin_fin_bas = 3,
-    .pin_moteur_in1 = 8,
-    .pin_moteur_in2 = 9,
-    .pin_moteur_ena = 10,
-    .tempo_mouvement_max_ms = 8000, // 8 secondes
-    .tempo_ouverte_ms = 5000,       // 5 secondes
-    .capteurs_active_high = false   // Pull-up interne (Active LOW)
-};
+// Fonction de callback déclenchée en cas d'ouverture forcée / intrusion (FC bas modifié sans ordre UP)
+void surIntrusion() {
+    Serial.println("ALERTE / DEFAUT : Tentative d'ouverture forcee detectee !");
+}
 
 void setup() {
     Serial.begin(9600);
-    // Initialisation du sous-système
-    cycle_init(&config_barriere);
+    
+    // Attachement de la fonction de sécurité/intrusion au module mBarriere
+    callbackBarriere(surIntrusion);
+    
+    Serial.println("Sous-systeme 3 (mBarriere) initialise.");
 }
 
 void loop() {
-    // 1. Gestion des messages série reçus
+    // 1. Interprétation des commandes ASCII reçues sur la liaison série
     if (Serial.available() > 0) {
         String msg = Serial.readStringUntil('\n');
-        msg += "\n";
-        cycle_parse_ascii_message(msg.c_str());
+        msg.trim(); // Nettoie les caractères invisibles (\r, \n, espaces)
+
+        if (msg == "OK") {
+            Serial.println("Commande OK reçue -> Lancement de l'ouverture (barriereUP)");
+            barriereUP();
+        } 
+        else if (msg == "NoK" || msg == "TimeOut") {
+            Serial.println("Commande NoK/TimeOut reçue -> Lancement de la fermeture (barriereDW)");
+            barriereDW();
+        } 
+        else if (msg == "IN" || msg == "OUT") {
+            Serial.println("Vehicule detecte (IN/OUT) -> Attente de la decision d'autorisation...");
+        } 
+        else if (msg.length() > 0) {
+            Serial.print("Commande inconnue : ");
+            Serial.println(msg);
+        }
     }
 
-    // 2. Traitement cyclique non bloquant de la FSM et des sécurités
-    cycle_process();
+    // Le module mBarriere gère ses fins de course et l'arrêt du moteur de façon non-bloquante.
 }
