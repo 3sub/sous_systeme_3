@@ -14,6 +14,7 @@ Le fichier `.cpp` est obligatoire : le `.h` indique l'existence des fonctions, m
 
 Actions via la barre inférieure de VS Code (PlatformIO) :
 
+* **Serial Monitor (🔌)** : liste des ports COM disponibles, ce qui confirmera que la carte est détectée.
 * **Compilation (✓)** : Vérifie le code sans brancher la carte.
 * **Téléversement (→)** : Compile et envoie le programme sur l'Arduino.
 
