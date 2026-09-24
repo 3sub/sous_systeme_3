@@ -1,39 +1,26 @@
 ## Architecture du code
 
-Le projet est structuré en trois fichiers distincts pour respecter les principes de la programmation C/C++ et garantir la modularité du système :
-
 | Fichier | Rôle |
 | :--- | :--- |
-| **mBarriere.h** | **Déclaration** : Liste les prototypes de fonctions disponibles (`barriereUP()`, `barriereDW()`, etc.). |
-| **mBarriere.cpp** | **Implémentation** : Contient le code exécutable qui pilote les moteurs, la logique matérielle et la sécurité. |
-| **main.cpp** | **Orchestration** : Gère la boucle principale (`setup` et `loop`) et appelle les fonctions du module. |
+| **mBarriere.h** | Déclaration des fonctions (`barriereUP()`, `barriereDW()`). |
+| **mBarriere.cpp** | Code exécutable (pilotage moteur et sécurité). |
+| **main.cpp** | Boucle principale (`setup`/`loop`) et coordination. |
 
-### Pourquoi le fichier `.cpp` est indispensable
-* **Règle de compilation C++** : Le fichier `.h` informe le compilateur des fonctions disponibles, mais le fichier `.cpp` fournit le code binaire réel. Sans lui, l'étape d'édition de liens échoue avec l'erreur `undefined reference`.
-* **Modularité et propreté** : Le composant barrière reste indépendant, réutilisable dans d'autres projets et séparé de la logique globale du `main.cpp`.
+Le fichier `.cpp` est obligatoire : le `.h` indique l'existence des fonctions, mais seul le `.cpp` contient leur code réel (évite l'erreur *undefined reference*).
 
 ---
 
 ## Compilation et téléversement
 
-Les commandes principales s'exécutent depuis la barre d'état située en bas de Visual Studio Code (extension PlatformIO) :
+Actions via la barre inférieure de VS Code (PlatformIO) :
 
-1. **Vérifier le code (Compilation)** :
-   Cliquer sur la **coche (✓)**. Cette étape vérifie l'absence d'erreurs dans le code sans l'envoyer à la carte (branchement USB non requis).
-
-2. **Envoyer le programme (Téléversement)** :
-   Cliquer sur la **flèche vers la droite (→)**. Cette étape compile le projet puis l'injecte dans la mémoire flash de l'Arduino (la carte doit être branchée en USB).
+* **Compilation (✓)** : Vérifie le code sans brancher la carte.
+* **Téléversement (→)** : Compile et envoie le programme sur l'Arduino.
 
 ---
 
-## Fonctionnement du Moniteur Série (icône prise électrique)
+## Moniteur série (prise électrique)
 
-L'icône en forme de **prise électrique** correspond au **Device Monitor** (Moniteur Série).
+Ouvre le terminal pour lire les messages (`Serial.println`) et envoyer des commandes (`OK`, `NoK`). 
 
-* **Faut-il le lancer à chaque démarrage de VS Code ?**
-  Non. Une fois le programme téléversé sur l'Arduino via le bouton flèche (→), la carte enregistre le code dans sa mémoire permanente. L'Arduino s'exécute de façon autonome dès qu'il est alimenté en électricité, sans nécessiter ce bouton.
-
-* **À quoi sert cette fonction ?**
-  Elle permet de recevoir et d'envoyer des données textuelles entre le PC et la carte via le câble USB :
-  * **Affichage** : Lire les messages émis par `Serial.println()` (ex : logs de diagnostic, détection d'intrusion).
-  * **Commande** : Saisir manuellement des ordres dans le terminal (ex : taper `OK`, `NoK` ou `IN` pour tester les réactions de la barrière).
+Inutile de cliquer dessus à chaque lancement : une fois le programme téléversé, l'Arduino s'exécute automatiquement dès qu'il est alimenté.
