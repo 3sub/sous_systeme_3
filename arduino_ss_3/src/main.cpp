@@ -1,42 +1,44 @@
 #include <Arduino.h>
+#include "pinOut.h"
 #include "mBarriere.h"
 
-// Fonction de callback déclenchée en cas d'ouverture forcée / intrusion (FC bas modifié sans ordre UP)
-void surIntrusion() {
-    Serial.println("ALERTE / DEFAUT : Tentative d'ouverture forcee detectee !");
+// Fonction de sécurité déclenchée sur intrusion
+void surIntrusion(void) {
+    Serial.println("ALERTE : Tentative d'ouverture forcee detectee !");
 }
 
 void setup() {
     Serial.begin(9600);
     
-    // Attachement de la fonction de sécurité/intrusion au module mBarriere
+    // Configuration des broches du moteur et capteurs issues de pinOut.h
+    pinMode(PIN_FIN_HAUT, INPUT_PULLUP);
+    pinMode(PIN_FIN_BAS, INPUT_PULLUP);
+    pinMode(PIN_MOTOR_IN1, OUTPUT);
+    pinMode(PIN_MOTOR_IN2, OUTPUT);
+    pinMode(PIN_MOTOR_ENA, OUTPUT);
+
+    // Enregistrement du callback de sécurité
     callbackBarriere(surIntrusion);
     
     Serial.println("Sous-systeme 3 (mBarriere) initialise.");
 }
 
 void loop() {
-    // 1. Interprétation des commandes ASCII reçues sur la liaison série
+    // Interprétation des commandes ASCII reçues
     if (Serial.available() > 0) {
         String msg = Serial.readStringUntil('\n');
-        msg.trim(); // Nettoie les caractères invisibles (\r, \n, espaces)
+        msg.trim();
 
         if (msg == "OK") {
-            Serial.println("Commande OK reçue -> Lancement de l'ouverture (barriereUP)");
+            Serial.println("Commande OK -> Ouverture barriereUP()");
             barriereUP();
         } 
         else if (msg == "NoK" || msg == "TimeOut") {
-            Serial.println("Commande NoK/TimeOut reçue -> Lancement de la fermeture (barriereDW)");
+            Serial.println("Commande NoK/TimeOut -> Fermeture barriereDW()");
             barriereDW();
         } 
         else if (msg == "IN" || msg == "OUT") {
-            Serial.println("Vehicule detecte (IN/OUT) -> Attente de la decision d'autorisation...");
-        } 
-        else if (msg.length() > 0) {
-            Serial.print("Commande inconnue : ");
-            Serial.println(msg);
+            Serial.println("Vehicule detecte -> Attente decision");
         }
     }
-
-    // Le module mBarriere gère ses fins de course et l'arrêt du moteur de façon non-bloquante.
 }
