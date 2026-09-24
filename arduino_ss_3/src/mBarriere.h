@@ -6,10 +6,17 @@ Version/Auteur/Date : V2.0 DaK / B. Widerkher 20260924
 Fonction :
 Gère le moteur qui lève et rabaisse la barrière.
 
-Relais / Pont en H :
-    pinMotorUP (IN1) <-- Commande de montée
-    pinMotorDW (IN2) <-- Commande de descente
-    
+Câblage des Relais :
+    Relai pinMotorUP (IN1 - Montée) :
+        NF  (Normalement Fermé) <-- GND
+        COM (Commun)             <-- Borne 1 Moteur
+        NO  (Normalement Ouvert) <-- +VCC
+        
+    Relai pinMotorDW (IN2 - Descente) :
+        NF  (Normalement Fermé) <-- GND
+        COM (Commun)             <-- Borne 2 Moteur
+        NO  (Normalement Ouvert) <-- +VCC
+
 Utilise les fins de course pour arrêter les mouvements du moteur et maintenir la barrière ouverte.
 Signale toute tentative d'ouverture forcée (intrusion).
 */
