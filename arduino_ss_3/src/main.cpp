@@ -1,32 +1,44 @@
 #include <Arduino.h>
-#include "cycle_securite.h"
+#include "pinOut.h"
+#include "mBarriere.h"
 
-// Configuration des broches pour Arduino MEGA
-const CycleConfig_t config_barriere = {
-    .pin_fin_haut = 2,
-    .pin_fin_bas = 3,
-    .pin_moteur_in1 = 8,
-    .pin_moteur_in2 = 9,
-    .pin_moteur_ena = 10,
-    .tempo_mouvement_max_ms = 8000, // 8 secondes
-    .tempo_ouverte_ms = 5000,       // 5 secondes
-    .capteurs_active_high = false   // Pull-up interne (Active LOW)
-};
+// Fonction de sécurité déclenchée sur intrusion
+void surIntrusion(void) {
+    Serial.println("ALERTE : Tentative d'ouverture forcee detectee !");
+}
 
 void setup() {
     Serial.begin(9600);
-    // Initialisation du sous-système
-    cycle_init(&config_barriere);
+    
+    // Configuration des broches du moteur et capteurs issues de pinOut.h
+    pinMode(PIN_FIN_HAUT, INPUT_PULLUP);
+    pinMode(PIN_FIN_BAS, INPUT_PULLUP);
+    pinMode(PIN_MOTOR_IN1, OUTPUT);
+    pinMode(PIN_MOTOR_IN2, OUTPUT);
+    pinMode(PIN_MOTOR_ENA, OUTPUT);
+
+    // Enregistrement du callback de sécurité
+    callbackBarriere(surIntrusion);
+    
+    Serial.println("Sous-systeme 3 (mBarriere) initialise.");
 }
 
 void loop() {
-    // 1. Gestion des messages série reçus
+    // Interprétation des commandes ASCII reçues
     if (Serial.available() > 0) {
         String msg = Serial.readStringUntil('\n');
-        msg += "\n";
-        cycle_parse_ascii_message(msg.c_str());
-    }
+        msg.trim();
 
-    // 2. Traitement cyclique non bloquant de la FSM et des sécurités
-    cycle_process();
+        if (msg == "OK") {
+            Serial.println("Commande OK -> Ouverture barriereUP()");
+            barriereUP();
+        } 
+        else if (msg == "NoK" || msg == "TimeOut") {
+            Serial.println("Commande NoK/TimeOut -> Fermeture barriereDW()");
+            barriereDW();
+        } 
+        else if (msg == "IN" || msg == "OUT") {
+            Serial.println("Vehicule detecte -> Attente decision");
+        }
+    }
 }

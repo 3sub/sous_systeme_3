@@ -1,26 +1,27 @@
-### Compiler avec CMake
+## Architecture du code
 
-Depuis le terminal VS Code, à la racine du projet :
+| Fichier | Rôle |
+| :--- | :--- |
+| **mBarriere.h** | Déclaration des fonctions (`barriereUP()`, `barriereDW()`). |
+| **mBarriere.cpp** | Code exécutable (pilotage moteur et sécurité). |
+| **main.cpp** | Boucle principale (`setup`/`loop`) et coordination. |
 
-```bash
-cmake -S . -B build
-```
+Le fichier `.cpp` est obligatoire : le `.h` indique l'existence des fonctions, mais seul le `.cpp` contient leur code réel (évite l'erreur *undefined reference*).
 
-```bash
-cmake --build build
-```
+---
 
-Tu peux ensuite lancer le programme :
+## Compilation et téléversement
 
-```exe
-.\build\Debug\sous_systeme_3.exe
-```
-Quand refaire cmake -S . -B build ?
+Actions via la barre inférieure de VS Code (PlatformIO) :
 
-Tu dois refaire cette commande lorsque tu modifies la configuration de CMake, par exemple :
+* **Serial Monitor (🔌)** : liste des ports COM disponibles, ce qui confirmera que la carte est détectée.
+* **Compilation (✓)** : Vérifie le code sans brancher la carte.
+* **Téléversement (→)** : Compile et envoie le programme sur l'Arduino.
 
-tu ajoutes un nouveau fichier .cpp dans CMakeLists.txt
-tu changes les options de compilation
-tu ajoutes une bibliothèque
-tu changes de compilateur
-tu supprimes ou recrées le dossier build
+---
+
+## Moniteur série (prise électrique)
+
+Ouvre le terminal pour lire les messages (`Serial.println`) et envoyer des commandes (`OK`, `NoK`). 
+
+Inutile de cliquer dessus à chaque lancement : une fois le programme téléversé, l'Arduino s'exécute automatiquement dès qu'il est alimenté.
