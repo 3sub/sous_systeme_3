@@ -6,11 +6,12 @@ Version/Auteur/Date : V2.0 Ton 20261112
 #include <Arduino.h>
 #include <string.h>
 
+
 #include "eAdmin.h"
 #include "eBDD.h"
 #include "eFileSystem.h"
 #include "eGenCode.h"
-#include "eLog.h"
+#include "elog.h"
 #include "eLogic.h"
 #include "eSerial.h"
 #include "eWebCode.h"
@@ -22,7 +23,7 @@ Version/Auteur/Date : V2.0 Ton 20261112
 
 static char uidCourant[21] = "";   // badge en attente de son code
 static HardwareSerial serialMEGA(2);
-bool liste(char* json, size_t taille);
+static eBDD bdd;                   // base de données des badges
 
 // Cherche l'UID dans la liste JSON de eBDD. Renvoie vrai s'il existe, et dit s'il est admin.
 static bool chercherUID(const char* uid, bool* admin)
@@ -30,7 +31,7 @@ static bool chercherUID(const char* uid, bool* admin)
     static char json[4096];
     char cle[32];
 
-    if (!liste(json, sizeof(json))) return false;
+    if (!bdd.liste(json, sizeof(json))) return false;
 
     snprintf(cle, sizeof(cle), "\"%s\"", uid);
     char* p = strstr(json, cle);
@@ -67,6 +68,7 @@ static void badgeLu(const char* uid)
     if (code == 0)
     {
         espLog("erreur generation code");
+        uidCourant[0] = '\0';
         WrDENIED();
         return;
     }
