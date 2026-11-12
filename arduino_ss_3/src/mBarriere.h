@@ -22,12 +22,6 @@ Signale toute tentative d'ouverture forcée (intrusion).
 */
 #pragma once
 
-#include <stdint.h>
-#include <stdbool.h>
-
-#ifdef __cplusplus
-extern "C" {
-#endif
 
 // Lance le levage de la barrière (non bloquant)
 void barriereUP(void);
@@ -35,12 +29,8 @@ void barriereUP(void);
 // Lance la fermeture de la barrière (non bloquant)
 void barriereDW(void);
 
-// Renvoie l'état courant du moteur (true = en mouvement/ouverte, false = fermée/arrêtée)
+// Renvoie l'état courant (true = en mouvement/ouverte, false = fermée/arrêtée)
 bool barriere(void);
 
 // Permet de définir une fonction à appeler lorsque le FC bas change d'état sans ordre barriereUP()
 void callbackBarriere(void (*intrusion)(void));
-
-#ifdef __cplusplus
-}
-#endif
