@@ -6,10 +6,11 @@ Version/Auteur/Date : V1.1 DaK et AJM 2026/10/08
 Implémentation de espLogWrite() : ajoute une ligne à la fin du fichier de log.
 Format écrit : millis(),fichier,fonction,ligne,"message"\n
 */
-#include "eLog.h"
+#include "elog.h"
 
 #include <Arduino.h>
-#include "LittleFS.h"
+#include <FS.h>
+#include <LittleFS.h>
 
 // Chemin du fichier de log (à adapter si besoin)
 #ifndef ELOG_FILE_PATH
@@ -39,7 +40,7 @@ static const char* eLogNomFichier( const char* chemin )
     return nom;
 }
 
-bool espLogWrite( const char* message, const char* fichier, const char* fonction, int ligne )
+bool __espLogWrite( const char* message, const char* fichier, const char* fonction, int ligne )
 {
     if ( !eLogInitFs() ) return false;
 
