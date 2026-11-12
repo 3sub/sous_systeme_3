@@ -21,7 +21,8 @@ Version/Auteur/Date : V2.0 Ton 20261112
 #define TIMEOUT_CODE (5 * 60)
 
 static char uidCourant[21] = "";   // badge en attente de son code
-
+static HardwareSerial serialMEGA(2);
+bool liste(char* json, size_t taille);
 
 // Cherche l'UID dans la liste JSON de eBDD. Renvoie vrai s'il existe, et dit s'il est admin.
 static bool chercherUID(const char* uid, bool* admin)
@@ -116,7 +117,7 @@ static void traiterMessage(const char* msg)
 void SetupLogic()
 {
     Serial.begin(115200);
-    beginSerialMEGA(Serial2, 9600, RX_MEGA, TX_MEGA);
+    beginSerialMEGA(serialMEGA, 9600, RX_MEGA, TX_MEGA);
     WebInit();
     espLog("demarrage ESP32");
 }
@@ -126,7 +127,7 @@ void LoopLogic()
 {
     AdminActive();
 
-    if (Serial2.available())
+    if (serialMEGA.available())
     {
         delay(30);  // laisse arriver tout le message (readMEGA ne garde pas les messages coupés)
         char msg[32];

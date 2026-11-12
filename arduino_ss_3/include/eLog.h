@@ -14,7 +14,7 @@ l'information millis() est ajoutée par le module.
 #pragma once
 
 #ifndef espLog
-#define espLog(message) __espLog( TODO compléter la macro
+#define espLog(message) __espLog( message, __FILE__, __FUNCTION__, __LINE__ )
 #endif
 
 // Ecrit le message dans le fichier de log.

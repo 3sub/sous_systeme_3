@@ -15,4 +15,4 @@ bool WebInit();
 
 // renseigne la page par défaut avec le code 4 chiffres passé en paramètre
 // renvoie vrai tant qu'on est à l'intérieur de la durée permise (pour un même code)
-bool Affiche2FA( const string codeTemporaire, uint32_t secondes = 5*60 );
+bool Affiche2FA( const std::string codeTemporaire, uint32_t secondes = 5*60 );
