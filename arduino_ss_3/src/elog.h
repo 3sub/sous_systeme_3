@@ -12,10 +12,9 @@ L'information millis() est ajoutée par le module.
 */
 #pragma once
 
-#include <stdbool.h>
-
 // Ecrit le message dans le fichier de log.
 // Usage : espLog( "message" );
+
 #ifndef espLog
 #define espLog(message) __espLogWrite( (message), __FILE__, __func__, __LINE__ )
 #endif
@@ -23,4 +22,5 @@ L'information millis() est ajoutée par le module.
 // Fonction réellement appelée par la macro.
 // Format écrit : millis(),fichier,fonction,ligne,"message"\n
 // Retourne true si l'écriture a réussi.
+
 bool __espLogWrite( const char* message, const char* fichier, const char* fonction, int ligne );

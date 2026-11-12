@@ -1,7 +1,6 @@
 #include <Arduino.h>
 #include "pinOut.h"
 #include "mBarriere.h"
-
 // Fonction de sécurité déclenchée sur intrusion
 void surIntrusion(void) {
     Serial.println("ALERTE : Tentative d'ouverture forcee detectee !");
